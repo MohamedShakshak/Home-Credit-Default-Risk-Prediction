@@ -75,9 +75,7 @@ def add_ext_source_features(df: pd.DataFrame) -> pd.DataFrame:
 
     # Weighted mean — ext_2 most predictive.
     weights = {c: (0.5 if "1" in c else 2.0 if "2" in c else 1.5) for c in present}
-    weighted_sum = sum(
-        df[c].fillna(df["EXT_SOURCE_MEAN"]) * w for c, w in weights.items()
-    )
+    weighted_sum = sum(df[c].fillna(df["EXT_SOURCE_MEAN"]) * w for c, w in weights.items())
     df["EXT_SOURCE_WEIGHTED"] = weighted_sum / 4.0
 
     df["EXT_SOURCE_COUNT"] = df[present].notna().sum(axis=1)
@@ -110,12 +108,8 @@ def add_social_document_features(df: pd.DataFrame) -> pd.DataFrame:
     df["SOCIAL_CIRCLE_DEFAULT_RATE"] = def_30 / (obs_30 + 1)
 
     # Region rating.
-    df["REGION_RATING_MEAN"] = (
-        df["REGION_RATING_CLIENT"] + df["REGION_RATING_CLIENT_W_CITY"]
-    ) / 2
-    df["REGION_CITY_DIFF"] = (
-        df["REGION_RATING_CLIENT_W_CITY"] - df["REGION_RATING_CLIENT"]
-    )
+    df["REGION_RATING_MEAN"] = (df["REGION_RATING_CLIENT"] + df["REGION_RATING_CLIENT_W_CITY"]) / 2
+    df["REGION_CITY_DIFF"] = df["REGION_RATING_CLIENT_W_CITY"] - df["REGION_RATING_CLIENT"]
 
     # Document submission.
     doc_cols = [c for c in df.columns if c.startswith("FLAG_DOCUMENT")]
@@ -124,8 +118,15 @@ def add_social_document_features(df: pd.DataFrame) -> pd.DataFrame:
 
     # Contact flags.
     contact_cols = [
-        c for c in ["FLAG_MOBIL", "FLAG_EMP_PHONE", "FLAG_WORK_PHONE",
-                     "FLAG_CONT_MOBILE", "FLAG_PHONE", "FLAG_EMAIL"]
+        c
+        for c in [
+            "FLAG_MOBIL",
+            "FLAG_EMP_PHONE",
+            "FLAG_WORK_PHONE",
+            "FLAG_CONT_MOBILE",
+            "FLAG_PHONE",
+            "FLAG_EMAIL",
+        ]
         if c in df.columns
     ]
     df["CONTACT_COUNT"] = df[contact_cols].sum(axis=1)
@@ -140,9 +141,14 @@ def add_missing_indicators(df: pd.DataFrame) -> pd.DataFrame:
     """Create binary missingness flags for known high-signal columns."""
     df = df.copy()
     cols = [
-        "EXT_SOURCE_1", "EXT_SOURCE_3", "AMT_GOODS_PRICE",
-        "AMT_ANNUITY", "OWN_CAR_AGE", "OCCUPATION_TYPE",
-        "CNT_FAM_MEMBERS", "DAYS_LAST_PHONE_CHANGE",
+        "EXT_SOURCE_1",
+        "EXT_SOURCE_3",
+        "AMT_GOODS_PRICE",
+        "AMT_ANNUITY",
+        "OWN_CAR_AGE",
+        "OCCUPATION_TYPE",
+        "CNT_FAM_MEMBERS",
+        "DAYS_LAST_PHONE_CHANGE",
     ]
     for col in cols:
         if col in df.columns:
