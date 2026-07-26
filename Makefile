@@ -29,10 +29,13 @@ type:
 	uv run mypy src
 
 test:
-	uv run pytest
-
-test-fast:
 	uv run pytest -m "not slow"
+
+test-slow:
+	uv run pytest -m "slow"
+
+test-all:
+	uv run pytest
 
 smoke:
 	uv run pytest tests/test_smoke.py
