@@ -125,8 +125,13 @@ class SHAPExplainer:
 
             # base_value
             bv = explainer.expected_value
-            if isinstance(bv, (list, np.ndarray)):
-                bv = bv[-1] if bv.ndim == 1 else bv.item() if bv.ndim == 0 else bv
+            if isinstance(bv, list):
+                bv = bv[-1]
+            elif isinstance(bv, np.ndarray):
+                if bv.ndim == 1:
+                    bv = bv[-1]
+                elif bv.ndim == 0:
+                    bv = bv.item()
             base_values_list.append(float(bv))
 
         # W13: average SHAP values and base values across folds.
@@ -148,8 +153,7 @@ class SHAPExplainer:
         shap_pairs = list(zip(self._feature_names, avg_shap.tolist(), strict=True))
         shap_pairs_sorted = sorted(shap_pairs, key=lambda x: abs(x[1]), reverse=True)
         top_reasons = [
-            {"feature": name, "shap": round(val, 6)}
-            for name, val in shap_pairs_sorted[:5]
+            {"feature": name, "shap": round(val, 6)} for name, val in shap_pairs_sorted[:5]
         ]
 
         return {
@@ -184,10 +188,7 @@ class SHAPExplainer:
             all_importances.append(mean_abs)
 
         avg_importance = np.mean(all_importances, axis=0)
-        ranked = [
-            self._feature_names[i]
-            for i in np.argsort(avg_importance)[::-1]
-        ]
+        ranked = [self._feature_names[i] for i in np.argsort(avg_importance)[::-1]]
         return ranked
 
     def _assert_column_order(self, x_row: pd.DataFrame) -> None:

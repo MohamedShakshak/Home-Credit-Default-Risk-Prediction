@@ -72,7 +72,9 @@ def test_explainer_init(
     models, x = trained_ensemble
     names = list(x.columns)
     explainer = SHAPExplainer(
-        fold_models=models, feature_names=names, background_size=30,
+        fold_models=models,
+        feature_names=names,
+        background_size=30,
     )
     assert explainer.top_features == []
     assert explainer.feature_names == names
@@ -84,7 +86,9 @@ def test_explainer_fit_computes_top_features(
     models, x = trained_ensemble
     names = list(x.columns)
     explainer = SHAPExplainer(
-        fold_models=models, feature_names=names, background_size=30,
+        fold_models=models,
+        feature_names=names,
+        background_size=30,
     )
     explainer.fit(x)
     assert len(explainer.top_features) == len(names)
@@ -98,7 +102,9 @@ def test_explainer_explain_returns_all_keys(
     models, x = trained_ensemble
     names = list(x.columns)
     explainer = SHAPExplainer(
-        fold_models=models, feature_names=names, background_size=30,
+        fold_models=models,
+        feature_names=names,
+        background_size=30,
     )
     explainer.fit(x)
     result = explainer.explain(x.iloc[:1])
@@ -115,7 +121,9 @@ def test_explainer_column_order_assertion(
     models, x = trained_ensemble
     names = list(x.columns)
     explainer = SHAPExplainer(
-        fold_models=models, feature_names=names, background_size=30,
+        fold_models=models,
+        feature_names=names,
+        background_size=30,
     )
     explainer.fit(x)
 
@@ -132,7 +140,9 @@ def test_explainer_save_load(
     models, x = trained_ensemble
     names = list(x.columns)
     explainer = SHAPExplainer(
-        fold_models=models, feature_names=names, background_size=30,
+        fold_models=models,
+        feature_names=names,
+        background_size=30,
     )
     explainer.fit(x)
 
@@ -158,7 +168,10 @@ def test_explainer_with_calibrator(
     models, x = trained_ensemble
     names = list(x.columns)
     explainer = SHAPExplainer(
-        fold_models=models, feature_names=names, calibrator=calibrator, background_size=30,
+        fold_models=models,
+        feature_names=names,
+        calibrator=calibrator,
+        background_size=30,
     )
     explainer.fit(x)
     result = explainer.explain(x.iloc[:1])
@@ -174,7 +187,9 @@ def test_explainer_shap_value_length(
     models, x = trained_ensemble
     names = list(x.columns)
     explainer = SHAPExplainer(
-        fold_models=models, feature_names=names, background_size=30,
+        fold_models=models,
+        feature_names=names,
+        background_size=30,
     )
     explainer.fit(x)
     result = explainer.explain(x.iloc[:1])
@@ -188,7 +203,9 @@ def test_explainer_fold_average(
     models, x = trained_ensemble
     names = list(x.columns)
     explainer = SHAPExplainer(
-        fold_models=models, feature_names=names, background_size=30,
+        fold_models=models,
+        feature_names=names,
+        background_size=30,
     )
     explainer.fit(x)
     # If only 1 model, result is just that model's SHAP.
