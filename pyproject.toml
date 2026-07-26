@@ -28,6 +28,7 @@ dependencies = [
     "psutil>=5.9,<7",
     "python-dotenv>=1.0,<2",
     "pyarrow>=14,<20",
+    "python-multipart>=0.0.6",
 ]
 
 [dependency-groups]
@@ -71,6 +72,7 @@ docstring-code-format = true
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "tests/*" = ["N802", "N803", "TC001", "TC002", "TC003"]
+"src/home_credit/api/routes/*" = ["B008"]
 
 [tool.mypy]
 python_version = "3.11"
@@ -84,7 +86,7 @@ no_implicit_optional = true
 [[tool.mypy.overrides]]
 module = [
     "lightgbm.*", "xgboost.*", "shap.*", "dagshub.*", "mlflow.*",
-    "scipy.*", "sklearn.*", "joblib.*",
+    "scipy.*", "sklearn.*", "joblib.*", "prometheus_fastapi_instrumentator.*",
 ]
 ignore_missing_imports = true
 

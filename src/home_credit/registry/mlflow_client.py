@@ -36,7 +36,9 @@ def start_run(
     """Start a new MLflow run. Returns the run ID."""
     setup_tracking()
     exp = mlflow.get_experiment_by_name(experiment_name)
-    exp_id = cast("str", mlflow.create_experiment(experiment_name) if exp is None else exp.experiment_id)
+    exp_id = cast(
+        "str", mlflow.create_experiment(experiment_name) if exp is None else exp.experiment_id
+    )
 
     run = mlflow.start_run(experiment_id=exp_id, run_name=run_name)
     if tags:
