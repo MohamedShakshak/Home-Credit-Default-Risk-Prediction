@@ -1,54 +1,45 @@
 # Home-Credit-Default-Risk-Prediction
 
-Production MLOps pipeline for the [Home Credit Default Risk](https://www.kaggle.com/competitions/home-credit-default-risk) Kaggle competition. Predicts loan default (`TARGET=1`).
+Production MLOps pipeline for the [Home Credit Default Risk](https://www.kaggle.com/competitions/home-credit-default-risk) competition — predicts whether an applicant will default on a loan (`TARGET=1`).
 
 ## Stack
-| Layer | Tool |
+| Layer | Implementation |
 |---|---|
-| Package / venv | `uv`, Python 3.11 |
-| Configs | Hydra (hierarchical YAML) |
-| Data versioning | DVC → DagsHub storage |
-| Experiment tracking | MLflow (DagsHub managed) |
-| Model registry | MLflow Model Registry (single PyFunc ensemble) |
-| API | FastAPI (`/predict`, `/predict_batch`, `/explain`) |
-| CI/CD | ruff + mypy + pytest + pre-commit + GitHub Actions |
-| Docker | Multi-stage API image |
+| Package manager | `uv`, Python 3.11 |
+| Configuration | Hydra (hierarchical YAML composition) |
+| Data versioning | DVC, remote via DagsHub storage |
+| Experiment tracking | MLflow (DagsHub-managed) |
+| Model registry | MLflow Model Registry — single PyFunc ensemble |
+| API | FastAPI — `/predict`, `/predict_batch`, `/explain` |
+| CI/CD | ruff, mypy, pytest, pre-commit, GitHub Actions |
+| Containerisation | Multi-stage Docker image (API only) |
 
-## Zero-leakage principle (ESSENTIAL)
-All transforms fit on training folds only, applied to val/test as transformers. Nothing crosses the train/val/test boundary. Enforced by `tests/test_no_leakage.py` + `tests/test_transformation_isolation.py` in CI.
-
-## Quickstart
+## Getting started
 ```bash
-uv sync                              # install (Python 3.11 venv)
-cp .env.example .env                 # set MLflow URI + DagsHub token + HC_DATA
-dvc pull                             # raw data (or place CSVs in data/raw/)
-uv run python -m home_credit.train   # train → log → register
-uv run uvicorn home_credit.api.app:app --reload  # serve API
-dvc repro                            # full pipeline
+uv sync                              # install dependencies
+cp .env.example .env                 # configure MLflow URI, DagsHub token, data path
+dvc pull                             # fetch raw data
+uv run python -m home_credit.train   # train → log to MLflow → register model
+uv run uvicorn home_credit.api.app:app --reload  # start API server
+dvc repro                            # reproduce full pipeline
 ```
 
-## Layout
+## Project layout
 ```
-configs/         Hydra configs (data, model, train, api)
-data/            raw (DVC) / interim / processed / models
-notebooks/       EDA reference (kept as-is)
-src/home_credit/ data | features | models | evaluate | explain | registry | api
-tests/           smoke · leakage · transformation-isolation · regression
-deployments/     api.Dockerfile
-docs/            ADRs · model_card · data_dictionary
+configs/           Hydra configs (data, model, train, api)
+data/              raw (DVC) / interim / processed / models
+notebooks/         EDA reference
+src/home_credit/   data | features | models | evaluate | explain | registry | api
+tests/             smoke · data · config
+deployments/       api.Dockerfile
+docs/              ADRs · model card · data dictionary
 ```
 
 ## Development
 ```bash
-make ci      # lint + type + test (full gate)
-make test    # pytest --cov
-make serve   # uvicorn API
+make ci      # lint, type-check, test (CI gate)
+make test    # pytest with coverage
+make serve   # uvicorn API server
 make repro   # dvc repro
 ```
-`pre-commit install` → ruff, ruff-format, mypy, nbstripout on every commit.
-
-## Bug-fix ledger
-Refactor folds in notebook-review fixes: hardcoded Kaggle paths (C1), disjoint calibrator fit/eval (C2), SHAP raw-vs-probability (C3), SHAP return-shape (C4), transformer state isolation (C5), per-fold selection (W1), nested-CV blend weights (W6), native XGB NaN (W7), NaN-aware drift (W16), index-aligned fairness (W12), dynamic AUC (W14), tuned threshold (W15). Full table in `PLAN.md` §12.
-
-## Status
-Phase 0 (scaffolding) complete. Phases 1–11 in `PLAN.md`.
+`pre-commit install` enables ruff, ruff-format, mypy, and nbstripout on every commit.
