@@ -1,0 +1,6 @@
+# DVC ignore patterns (similar to .gitignore but for DVC operations)
+# Ignore large temporary data patterns that DVC should skip when scanning
+**/.ipynb_checkpoints/
+**/__pycache__/
+**/.pytest_cache/
+.git/

@@ -20,11 +20,14 @@ data/raw/
 data/interim/
 data/processed/
 data/models/
-*.dvc
 *.pkl
 *.joblib
 *.mlmodel
 *.mlflow
+
+# DVC cache + tmp (not git), but track .dvc/config
+.dvc/cache/
+.dvc/tmp/
 
 # API logs
 api/logs/

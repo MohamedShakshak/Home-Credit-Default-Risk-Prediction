@@ -1,0 +1,47 @@
+stages:
+  featurize:
+    cmd: uv run python -m home_credit.data.pipeline
+    deps:
+      - data/raw/
+      - src/home_credit/data/
+      - src/home_credit/features/
+      - src/home_credit/paths.py
+    params:
+      - configs/config.yaml:
+          - random_state
+      - configs/data/raw.yaml
+    outs:
+      - data/interim/
+    metrics:
+      - data/metrics/featurize_report.json:
+          cache: false
+    persist: true
+
+  train:
+    cmd: uv run python -m home_credit.train data=raw model=blend
+    deps:
+      - data/interim/
+      - src/home_credit/
+      - configs/
+      - scripts/
+    params:
+      - configs/config.yaml:
+          - random_state
+          - model_registry_name
+      - configs/model/blend.yaml:
+          - calibrator
+          - threshold
+      - configs/model/lgb.yaml
+      - configs/model/xgb.yaml
+      - configs/train/default.yaml
+    outs:
+      - data/models/:
+          persist: true
+    metrics:
+      - data/metrics/train_metrics.json:
+          cache: false
+    plots:
+      - data/metrics/calibration_curve.png:
+          cache: false
+      - data/metrics/roc_curve.png:
+          cache: false

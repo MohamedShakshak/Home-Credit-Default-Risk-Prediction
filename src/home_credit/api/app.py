@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager, suppress
+from typing import TYPE_CHECKING
 
 import structlog
 from fastapi import FastAPI
@@ -16,10 +16,11 @@ from home_credit.api.routes.predict import router as predict_router
 from home_credit.api.routes.predict_batch import router as predict_batch_router
 from home_credit.api.schemas import HealthResponse
 
-try:
-    from prometheus_fastapi_instrumentator import Instrumentator  # noqa: F401, F811
-except ImportError:
-    pass
+if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
+
+with suppress(ImportError):
+    from prometheus_fastapi_instrumentator import Instrumentator
 
 structlog.configure(
     processors=[

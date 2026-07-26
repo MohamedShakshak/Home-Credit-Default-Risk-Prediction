@@ -111,3 +111,34 @@ __all__ = [
     "build_full_features",
     "train_test_split_features",
 ]
+
+
+if __name__ == "__main__":
+    import json
+    from pathlib import Path
+
+    import pandas as pd
+
+    from home_credit.data.application import engineer_application_features
+    from home_credit.data.loader import load_application
+    from home_credit.features.encoders import CategoricalEncoder
+
+    train, test = load_application()
+    train_fe = engineer_application_features(train)
+    test_fe = engineer_application_features(test)
+
+    encoder = CategoricalEncoder()
+    x_encoded = encoder.fit_transform(train_fe.drop(columns=["TARGET", "SK_ID_CURR"], errors="ignore"))
+
+    interim_dir = Path(__file__).resolve().parent.parent.parent / "data" / "interim"
+    interim_dir.mkdir(parents=True, exist_ok=True)
+    train_fe.to_parquet(interim_dir / "train_fe.parquet", index=False)
+    test_fe.to_parquet(interim_dir / "test_fe.parquet", index=False)
+    pd.DataFrame({"columns": list(x_encoded.columns)}).to_parquet(interim_dir / "feature_names.parquet", index=False)
+
+    report = {"n_features": x_encoded.shape[1], "n_train": len(train_fe), "n_test": len(test_fe)}
+    metrics_dir = Path(__file__).resolve().parent.parent.parent / "data" / "metrics"
+    metrics_dir.mkdir(parents=True, exist_ok=True)
+    with open(metrics_dir / "featurize_report.json", "w") as f:
+        json.dump(report, f)
+    print(f"Featurize complete: {report}")

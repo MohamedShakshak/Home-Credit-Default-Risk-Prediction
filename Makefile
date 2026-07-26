@@ -57,3 +57,18 @@ repro:
 
 dvc-push:
 	dvc push
+
+dvc-pull:
+	dvc pull
+
+dvc-add:
+	dvc add data/raw/
+
+dvc-status:
+	dvc status
+
+init-dvc:
+	uv run python scripts/init_dvc.py
+
+dvc-dag:
+	dvc dag
