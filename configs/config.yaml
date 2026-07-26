@@ -1,0 +1,22 @@
+defaults:
+  - data: raw
+  - model: blend
+  - train: default
+  - api: local
+  - _self_
+
+# Top-level constants
+random_state: 42
+project_name: home_credit_default
+model_registry_name: home_credit_default
+model_stage: Staging
+
+# Where to find things (resolved by Hydra ${...} in subconfigs)
+paths:
+  data_dir: ${oc.env:HC_DATA,data/raw}
+  processed_dir: data/processed
+  interim_dir: data/interim
+  models_dir: data/models
+
+# Metadata
+version: 0.1.0

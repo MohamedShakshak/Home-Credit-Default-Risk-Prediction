@@ -1,0 +1,13 @@
+# Raw data sources
+files:
+  application_train: application_train.csv
+  application_test: application_test.csv
+  bureau: bureau.csv
+  bureau_balance: bureau_balance.csv
+  previous_application: previous_application.csv
+  pos_cash_balance: POS_CASH_balance.csv
+  credit_card_balance: credit_card_balance.csv
+  installments_payments: installments_payments.csv
+
+target_col: TARGET
+id_col: SK_ID_CURR

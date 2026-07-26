@@ -1,0 +1,11 @@
+# Processed feature store
+n_splits: 5
+shuffle: true
+stratify: true
+val_size: 0.2
+
+# Calibration split inside OOF
+cal_split:
+  test_size: 0.5
+  shuffle: true
+  stratify: true

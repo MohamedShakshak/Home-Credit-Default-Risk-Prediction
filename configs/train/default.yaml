@@ -1,0 +1,10 @@
+# Training orchestration
+seed: 42
+n_splits: 5
+early_stopping: true
+log_to_mlflow: true
+register_model: true
+model_stage: Staging
+
+# Threshold for decision rule (tuned, not hardcoded — fixes W15/W14)
+ensemble_auc: null  # computed dynamically from OOF (fixes W14)

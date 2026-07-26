@@ -1,0 +1,52 @@
+# Ensemble blend: LGB + XGB weights via nested CV (fixes W6)
+# Contains nested base-learner definitions so model=blend loads both.
+
+lgb:
+  n_estimators: 5000
+  learning_rate: 0.01
+  num_leaves: 31
+  max_depth: -1
+  min_child_samples: 20
+  subsample: 0.8
+  colsample_bytree: 0.8
+  reg_alpha: 0.1
+  reg_lambda: 0.1
+  early_stopping_rounds: 200
+  verbose: -1
+  # scale_pos_weight tuned via nested CV in phase 3 (fixes W8)
+  scale_pos_weight: 2.15
+
+xgb:
+  n_estimators: 5000
+  learning_rate: 0.01
+  max_depth: 6
+  min_child_weight: 5
+  subsample: 0.8
+  colsample_bytree: 0.8
+  reg_alpha: 0.1
+  reg_lambda: 1.0
+  early_stopping_rounds: 200
+  # tune via nested CV (fixes W8/Q1); hardcoded 11 was wrong
+  scale_pos_weight: 2.5
+  # XGBoost handles NaN natively (fixes W7: do NOT fillna(-999))
+  handle_missing: native
+
+blend:
+  method: search       # search | equal | stacking
+  n_trials: 50
+  inner_cv: 3
+  bounds:
+    lgb: [0.0, 1.0]
+    xgb: [0.0, 1.0]
+
+calibrator:
+  method: isotonic     # isotonic | sigmoid | auto
+  fit_on: cal_fit      # fit on cal_fit half only (fixes C2)
+  evaluate_on: cal_eval
+  select_method_on: cal_eval  # select calibrator type on eval (fixes W9)
+
+threshold:
+  tune_on: validation        # held-out validation fold (fixes W15)
+  business_metric: expected_loss
+  fp_cost: 1.0
+  fn_cost: 5.0

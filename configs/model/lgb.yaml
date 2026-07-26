@@ -1,0 +1,15 @@
+# LightGBM params
+n_estimators: 5000
+learning_rate: 0.01
+num_leaves: 31
+max_depth: -1
+min_child_samples: 20
+subsample: 0.8
+colsample_bytree: 0.8
+reg_alpha: 0.1
+reg_lambda: 0.1
+early_stopping_rounds: 200
+verbose: -1
+
+# scale_pos_weight tuned via nested CV in phase 3 (fixes W8)
+scale_pos_weight: 2.15
