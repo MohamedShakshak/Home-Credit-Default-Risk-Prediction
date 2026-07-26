@@ -37,7 +37,7 @@ This project implements a complete MLOps pipeline for credit default prediction:
 - **Stratified k-fold CV** — 5-fold cross-validation with per-fold early stopping
 - **Nested-CV model blending** — Blend weights are tuned on inner CV folds; the outer OOF provides an honest AUC estimate
 - **Bayesian target encoding** — Fold-safe target encoding with configurable smoothing
-- **NaN-aware drift monitoring** — PSI and KS statistics track NaN-rate shifts separately (a real signal in credit data)
+- **NaN-aware drift monitoring** — PSI and KS statistics track NaN-rate shifts separately (a real signal in credit data); API endpoint + CLI script for scheduled checks
 - **Index-aligned fairness audit** — Demographic parity metrics computed via `SK_ID_CURR` joins, not fragile `.values` assignment
 - **SHAP explainability** — Correct sigmoid→calibrator pipeline; SHAP values averaged across all fold models
 - **Feature name assertion** — Column order mismatch fails fast at inference time, preventing silent wrong predictions
@@ -190,6 +190,8 @@ uv run uvicorn home_credit.api.app:app --reload --host 0.0.0.0 --port 8000
 | `POST` | `/predict_batch` | Batch prediction (list of applicants) |
 | `POST` | `/predict_batch/csv` | Batch prediction from CSV upload |
 | `POST` | `/explain` | Single prediction with SHAP explanation |
+| `POST` | `/drift/report` | Upload reference + current CSV; per-feature PSI/KS/NaN-shift |
+| `POST` | `/drift/report/json` | Same, with JSON payload |
 | `GET` | `/health` | Service health check |
 | `GET` | `/metrics` | Prometheus metrics |
 | `GET` | `/docs` | Interactive API documentation (Swagger UI) |

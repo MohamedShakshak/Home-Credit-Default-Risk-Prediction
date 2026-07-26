@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from home_credit.api.deps import get_settings, load_model
 from home_credit.api.middleware import RequestIDMiddleware
+from home_credit.api.routes.drift import router as drift_router
 from home_credit.api.routes.explain import router as explain_router
 from home_credit.api.routes.predict import router as predict_router
 from home_credit.api.routes.predict_batch import router as predict_batch_router
@@ -64,6 +65,7 @@ def create_app() -> FastAPI:
     app.include_router(predict_router)
     app.include_router(predict_batch_router)
     app.include_router(explain_router)
+    app.include_router(drift_router)
 
     @app.get("/health", response_model=HealthResponse, tags=["system"])
     def health() -> HealthResponse:
