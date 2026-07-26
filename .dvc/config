@@ -1,0 +1,7 @@
+[core]
+    remote = dagshub
+['remote "dagshub"']
+    url = https://dagshub.com/mohamedshakshak455/Home-Credit-Default-Risk-Prediction.dvc
+    auth = basic
+    user = mohamedshakshak455
+    password = a573e672898018c526ef003d0c9575d0ff4d5007
