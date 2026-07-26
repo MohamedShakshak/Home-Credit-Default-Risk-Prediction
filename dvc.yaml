@@ -15,7 +15,6 @@ stages:
     metrics:
       - data/metrics/featurize_report.json:
           cache: false
-    persist: true
 
   train:
     cmd: uv run python -m home_credit.train data=raw model=blend
