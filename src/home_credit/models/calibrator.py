@@ -68,7 +68,11 @@ def calibrate_with_split(
     stratify = y_arr if np.bincount(y_arr.astype(int)).min() > 1 else None
 
     cal_fit_preds, cal_eval_preds, y_fit, y_eval = train_test_split(
-        oof_preds, y_arr, test_size=test_size, stratify=stratify, random_state=random_state,
+        oof_preds,
+        y_arr,
+        test_size=test_size,
+        stratify=stratify,
+        random_state=random_state,
     )
 
     best_brier = np.inf

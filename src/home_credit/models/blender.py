@@ -65,7 +65,9 @@ def optimize_blend_weights(
         y_tr, y_val = y_arr[tr_idx], y_arr[val_idx]
 
         # Bind loop values via default arg to avoid closure late-binding.
-        def loss(w: np.ndarray, _pa: np.ndarray = p_a_tr, _pb: np.ndarray = p_b_tr, _y: np.ndarray = y_tr) -> float:
+        def loss(
+            w: np.ndarray, _pa: np.ndarray = p_a_tr, _pb: np.ndarray = p_b_tr, _y: np.ndarray = y_tr
+        ) -> float:
             return _auc_loss(w, _pa, _pb, _y)
 
         result = minimize(
